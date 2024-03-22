@@ -1,11 +1,7 @@
-import Task from "./Task";
-import Storage from "./Storage";
-
 export default class Project {
     constructor(title) {
         this.title = title
         this.tasks = []
-        console.log('new project! ' + title)
     };
 
     getTitle() {

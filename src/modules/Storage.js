@@ -3,10 +3,11 @@ import Task from "./Task";
 import Project from "./Project";
 
 export default class Storage {
+
     static getList() {
         const dataList = Object.assign(
             new Container(),
-            JSON.parse(localStorage.getItem('doit'))
+            JSON.parse(localStorage.getItem('doit_app'))
         )
         dataList._setProjects(
             dataList._getProjects()
@@ -19,25 +20,43 @@ export default class Storage {
                 project.getTasks()
                 .map((task) => Object.assign(new Task(), task))
             )
-
         });
 
         return dataList;
     };
       
     static saveList(data) {
-        localStorage.setItem('doit', JSON.stringify(data));
+        localStorage.setItem('doit_app', JSON.stringify(data));
     }
 
-    static addProject(project) {
+    static getTaskParent(taskId) {
+        const projectList = Storage.getList()._getProjects();
+    
+        for (const project of projectList) {
+            const parent = project.getTasks().find(task => task.id === taskId);
+            if (parent) {
+                console.log('parent found: ' + project.getTitle());
+                return project.getTitle();
+            }
+        }
+    }
+
+    static getTaskObj(projectTitle, taskId) {
+        console.log('from storage getTaskObj!' + projectTitle + ', ' + taskId)
+       return Storage.getList()._getProject(projectTitle).getTask(taskId)
+    }
+    
+    //==/==//
+
+    static addProject(projectTitle) {
         const currentList = Storage.getList()
-        currentList._addProject(project)
+        currentList._addProject(new Project(projectTitle))
         Storage.saveList(currentList)
     }
 
-    static addTask(projectTitle, task) {
+    static addTask(projectTitle, taskTitle, taskDesctiption, taskDueDate, taskPriority) {
         const currentList = Storage.getList()
-        currentList._getProject(projectTitle).addTask(task)
+        currentList._getProject(projectTitle).addTask(new Task(taskTitle, taskDesctiption, taskDueDate, taskPriority))
         Storage.saveList(currentList)        
     }
 
@@ -47,9 +66,9 @@ export default class Storage {
         Storage.saveList(currentList)         
     }
 
-    static deleteTask(projectTitle, id) {
+    static deleteTask(projectTitle, taskId) {
         const currentList = Storage.getList()
-        currentList._getProject(projectTitle).deleteTask(id);
+        currentList._getProject(projectTitle).deleteTask(taskId);
         Storage.saveList(currentList) 
     }
 
@@ -59,7 +78,10 @@ export default class Storage {
         Storage.saveList(currentList)
     }
 
-    //static edit task
+    static checkTask(projectTitle, taskTitle, isChecked) {
+        const currentList = Storage.getList()
+        currentList._getProject(projectTitle).getTask(taskTitle).setChecked(isChecked);
+        Storage.saveList(currentList)
+    }
 
-  }
-
+}

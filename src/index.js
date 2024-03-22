@@ -1,28 +1,25 @@
-import Task from "./modules/Task";
-import Project from "./modules/Project";
 import Storage from "./modules/Storage";
-import Container from "./modules/Container";
-import dom from "./modules/DOM";
+import Listeners from "./modules/Listeners";
+import "./style.css"
 
 const demoInit = () => {
     localStorage.clear()
-    Storage.addProject(new Project('default'))
-    Storage.addProject(new Project('Shop'))
-    Storage.addProject(new Project('Work'))
+    Storage.addProject('default')
+    Storage.addProject('Shop')
+    Storage.addProject('Work')
 
-    Storage.addTask('default', new Task('Clean room', 'Organize clothes and furniture.', '2023-03-12'))
-    Storage.addTask('Shop', new Task('Buy groceries', 'Get bread, milk, eggs, and vegetables.', '2023-03-15'))
-    Storage.addTask('default', new Task('Walk dog', 'Take Charlie to the park for exercise.', '2023-03-17'))
-    Storage.addTask('Work', new Task('Study math', 'Review chapter 5 on linear equations.', '2023-03-20'))
-    Storage.addTask('Work', new Task('Email team', 'Send weekly report and schedule meeting.', '2023-03-22'))
-
-    Storage.deleteProject('Shop')
-    Storage.deleteTask('Work','Email team')
+    Storage.addTask('default', 'Clean room', 'Organize clothes and furniture.', '2023-03-12', '1')
+    Storage.addTask('Shop', 'Buy groceries', 'Get bread, milk, eggs, and vegetables.', '2023-03-15', '2')
+    Storage.addTask('default', 'Walk dog', 'Take Charlie to the park for exercise.', '2023-03-17', '0')
+    Storage.addTask('Work', 'Study math', 'Review chapter 5 on linear equations.', '2023-03-20', '1')
+    Storage.addTask('Work', 'Email team', 'Send weekly report and schedule meeting.', '2023-03-22', '2')
+    
+    Listeners.loadPage()
+    //Storage.deleteProject('Shop')
+    //Storage.deleteTask('Work','Email team')
 }
 
-const currentList = Storage.getList();
-const currentProject = 'default'
+const reset = () => localStorage.clear()
 
-dom.renderTaskRows(currentList._getProject(currentProject).getTasks())
+Listeners.loadPage()
 
-console.log(currentList)
