@@ -22,10 +22,12 @@ const demoInit = () => {
 const reset = () => localStorage.clear()
 
 
-if(!Storage.getList()){
+/* if(!Storage.getList()){
     demoInit()
     console.log('run demo data!')
-}
+} */
+
+demoInit()
 
 Listeners.loadPage()
 
