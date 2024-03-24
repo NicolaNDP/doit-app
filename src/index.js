@@ -34,7 +34,7 @@ const initApp = () => {
         console.log('data preloded!')
     }
 }
-
+initReset()
 initApp()
 
 //Listeners.loadPage()
