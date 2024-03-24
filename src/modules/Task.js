@@ -1,3 +1,5 @@
+import { format, formatDistance, subDays } from "date-fns";
+
 export default class Task {
     constructor(title, description, dueDate, priority) {
         this.title = title
@@ -20,19 +22,12 @@ export default class Task {
         return this.dueDate
     }
 
-    getPriority() {
-        return this.priority
+    getDueDate_distanceFrom(){
+        return formatDistance(this.getDueDate(), new Date(), { addSuffix: true })
     }
 
-    getPriorityDecode() {
-        switch(this.priority){
-            case '0': return 'low';
-            break
-            case '1': return '';
-            break
-            case '2': return 'high';
-            break
-        }
+    getPriority() {
+        return this.priority
     }
 
     getId() {

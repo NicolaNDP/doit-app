@@ -1,9 +1,10 @@
+import Container from "./Container"
 import Dom from "./DOM"
 import Storage from "./Storage"
 
 export default class Listeners {
 
-    static currentProject = 'default'
+    static currentProject = this.currentProject || Storage.getList()._getProjects()[0].getTitle() // || for  initialization
     
     static getCurrentList() {
         return Storage.getList()
@@ -14,6 +15,7 @@ export default class Listeners {
     }
 
     static loadPage() {
+            
         Dom.refreshPage(Listeners.currentProject)
         Listeners.initDomElements()
         Listeners.initNewProjectDialog()
@@ -27,13 +29,42 @@ export default class Listeners {
 
     static initDomElements() {
 
+        //==== HOVER TASK ===//
+        const tDiv = document.querySelectorAll('.task-div')
+
+        tDiv.forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                const taskId = section.id.slice(6)
+                const elementToShow = document.getElementById(`t-rightsubdiv-${taskId}`)
+                elementToShow.style.visibility = 'visible'
+            })
+            section.addEventListener('mouseleave', () => {
+                const taskId = section.id.slice(6)
+                const elementToHide = document.getElementById(`t-rightsubdiv-${taskId}`)
+                elementToHide.style.visibility = 'hidden'
+            })
+        })
+
+        //==== HOVER PROJ ===//
         const pDiv = document.querySelectorAll('.proj-div')
-        
+
+        pDiv.forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                const projName = section.id.slice(6)
+                const elementToShow = document.getElementById(`p-rightsubdiv-${projName}`)
+                elementToShow.style.visibility = 'visible'
+            })
+            section.addEventListener('mouseleave', () => {
+                const projName = section.id.slice(6)
+                const elementToHide = document.getElementById(`p-rightsubdiv-${projName}`)
+                elementToHide.style.visibility = 'hidden'
+            })
+        })
 
         const tTitle = document.querySelectorAll('.task-t3')
 
         //==== SELECT PROJ ===//
-        let pTitle = document.querySelectorAll('.proj-t2')
+        const pTitle = document.querySelectorAll('.proj-t2')
 
         pTitle.forEach(title => {
             title.addEventListener('click', () => {
@@ -41,8 +72,6 @@ export default class Listeners {
                 Listeners.loadPage() 
             })
         })
-
-        const tDiv = document.querySelectorAll('.task-div')
 
         //==== CHECK TASK ===//
         const tCheckbox = document.querySelectorAll('.task-checkbox')
@@ -137,23 +166,31 @@ export default class Listeners {
         let deleteBtn = document.querySelectorAll('.proj-deletebtn, .task-deletebtn')
 
         deleteBtn.forEach(button => {
-            let dialogDelete = document.querySelector('#modal-delete-dialog')
-            let dialogDeleteSubmitBtn = document.querySelector('#modal-delete-submitbtn')
-            let dialogDeleteCloseBtn = document.querySelector('#modal-delete-closebtn')
-            let dialogDeleteTitle = document.querySelector('#modal-delete-h2')
-            let isProject = button.id.startsWith('p')
-
-            Dom.renderDialogDelete()
-
             button.addEventListener('click', () => {
+
+                Dom.renderDialogDelete()
+                
+                let dialogDelete = document.querySelector('#modal-delete-dialog')
+                let dialogDeleteSubmitBtn = document.querySelector('#modal-delete-submitbtn')
+                let dialogDeleteCloseBtn = document.querySelector('#modal-delete-closebtn')
+                let dialogDeleteTitle = document.querySelector('#modal-delete-h2')
+                let isProject = button.id.startsWith('p')
+
+                
+
                 dialogDelete.showModal()
+
                 dialogDeleteTitle.innerText = isProject ?
                     `Delete Project '${button.id.slice(12)}'?` :
                     `Delete Task '${button.id.slice(12)}'?`
 
                 dialogDeleteSubmitBtn.addEventListener('click', () => {
                     if(isProject){
-                        Storage.deleteProject(button.id.slice(12))
+                        if(button.id.slice(12) !== Listeners.currentProject){
+                            Storage.deleteProject(button.id.slice(12))
+                            }else{
+                                alert('Sorry, cannot delete current project, yet...\nChoose another project, then delete this one.')
+                            }
                         }else{
                         Storage.deleteTask(Storage.getTaskParent(button.id.slice(12)), button.id.slice(12))
                     }

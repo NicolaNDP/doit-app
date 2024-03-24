@@ -1,7 +1,18 @@
 import Listeners from "./Listeners";
 import Storage from "./Storage";
 
+import iconDelete from "../assets/icon_delete.svg"
+import iconAdd from "../assets/icon_add.svg"
+import iconEdit from "../assets/icon_edit.svg"
+import iconEsc from "../assets/icon_esc.svg"
+import iconLogo from "../assets/icon_logo.svg"
+import iconLowPriority from "../assets/icon_lpriority.svg"
+import iconHighPriority from "../assets/icon_hpriority.svg"
+import iconNoPriority from "../assets/icon_npriority.svg"
+
+
 const Dom = (() => {
+    const header = document.querySelector('#header')
     const content = document.querySelector('#content')
     const panel = document.querySelector('#panel')
 
@@ -9,7 +20,9 @@ const Dom = (() => {
         const list = Storage.getList();
         content.innerHTML = ''
         panel.innerHTML = ''
+        header.innerHTML = ''
         console.log('from refresh list ' + currentProject)
+        renderHeader()
         renderProjects(list._getProjects())
         renderTasks(list._getProject(currentProject).getTasks())
         renderAddButtons()
@@ -27,65 +40,98 @@ const Dom = (() => {
         return element;
     }
 
-    const renderProjects = (projects) => {
-        projects.forEach((project) => {
-            const name = project.getTitle()
+    function renderHeader () {
+        console.log('header called!')
 
-            const div = createHtmlElement('div', `p-div-${name}`, ['proj-div'], null, null, panel);
-            
-            const title = createHtmlElement('t2', `p-t2-${name}` ,['proj-t2'], null, name, div);
+        const div = createHtmlElement('div', `header-div`, null, null, null, header);
 
-            const rightSubDiv = createHtmlElement('div', `p-rightsubdiv-${name}`, ['proj-rightsubdiv'], null, null, div);
+        const title = createHtmlElement('h1', 'header-title', null, null, 'DOIT!', div)
 
-            const editBtn = createHtmlElement('button',`p-editbtn-${name}`,['proj-editbtn'],'button','edit',rightSubDiv);
+        const logo = createHtmlElement('img', 'header-logo', null, null, null, title)
+        logo.src = iconLogo
 
-            const deleteBtn = createHtmlElement('button', `p-deletebtn-${name}`, ['proj-deletebtn'], 'button', 'delete', rightSubDiv);
-        })
+        const subTitle = createHtmlElement('p', 'header-subtitle', null, null, 'a to-do app', div)
     }
     
     const renderTasks = (tasks) => {
+        
+            const currentProject = createHtmlElement('t2', `title-currentproject` ,['title-currentproject'], null, Listeners.currentProject, content)
+
         tasks.forEach((task) => {
             const name = task.getTitle().toLowerCase().split(" ").join("_")
 
-            const div = createHtmlElement('div',`t-div-${name}`,['task-div'],null,null,content);
+            const div = createHtmlElement('div',`t-div-${task.getId()}`,['task-div'],null,null,content);
 
             const leftSubDiv = createHtmlElement('div', `t-leftsubdiv-${name}`, ['task-leftsubdiv'], null, null, div);
 
             const checkbox = createHtmlElement('input', `t-checkbox-${task.getId()}`, ['task-checkbox'], 'checkbox', null, leftSubDiv);
             checkbox.checked = task.isChecked() 
 
-            const title = createHtmlElement( 't3', `t-t3-${name}`, ['task-t3'], null, task.getTitle(), leftSubDiv);
+            const title = createHtmlElement( 'p', `t-t3-${name}`, ['task-t3'], null, task.getTitle(), leftSubDiv);
 
-            const date = createHtmlElement( 'p', `t-date-${name}`, ['task-date'], null, task.getDueDate(), div);
+            const date = createHtmlElement( 'p', `t-date-${name}`, ['task-date'], null, task.getDueDate_distanceFrom(), div);
 
-            const rightSubDiv = createHtmlElement('div', `t-rightsubdiv-${name}`, ['task-rightsubdiv'], null, null, div);
+            const priority = createHtmlElement('img', `t-priority-${name}`, ['task-priority'], null, null, div);
+                if(task.getPriority() !== '1'){
+                    priority.src = task.getPriority() === '0' ? iconLowPriority : iconHighPriority
+                }else{
+                    priority.src = iconNoPriority
+                }
+                console.log(task.getPriority())
 
-            const priority = createHtmlElement('p', `t-priority-${name}`, ['task-priority'], null, task.getPriorityDecode(), rightSubDiv);
-            console.log(task.getPriorityDecode())
+            const rightSubDiv = createHtmlElement('div', `t-rightsubdiv-${task.getId()}`, ['task-rightsubdiv'], null, null, div);
+                rightSubDiv.style.visibility = 'hidden'
 
-            const editBtn = createHtmlElement('button', `t-editbtn-${task.getId()}`, ['task-editbtn'], 'button', 'edit', rightSubDiv);
+            const editBtn = createHtmlElement('img', `t-editbtn-${task.getId()}`, ['task-editbtn'], null, null, rightSubDiv);
+                editBtn.src = iconEdit
 
-            const deleteBtn = createHtmlElement( 'button', `t-deletebtn-${task.getId()}`, ['task-deletebtn'], 'button', 'delete', rightSubDiv);
+            const deleteBtn = createHtmlElement( 'img', `t-deletebtn-${task.getId()}`, ['task-deletebtn'], null, null, rightSubDiv);
+                deleteBtn.src = iconDelete
 
             if (task.isChecked()) {
                 title.style.textDecoration = 'line-through'
+                title.style.opacity = 0.3
+                date.style.opacity = 0.3
+                priority.style.opacity = 0.3
                 editBtn.style.display = 'none'
             }
         })
     }
 
-    const renderAddButtons = () => {
-        const projAddBtn = createHtmlElement('button',`proj-addbtn`,null,'button','+proj',panel,);
+    const renderProjects = (projects) => {
+        projects.forEach((project) => {
+            const name = project.getTitle()
 
-        const taskAddBtn = createHtmlElement('button',`task-addbtn`,null,'button','+task',content,);
+            const div = createHtmlElement('div', `p-div-${name}`, ['proj-div'], null, null, panel);
+            
+            const title = createHtmlElement('p', `p-t2-${name}` ,['proj-t2'], null, name, div);
+
+            const rightSubDiv = createHtmlElement('div', `p-rightsubdiv-${name}`, ['proj-rightsubdiv'], null, null, div);
+                rightSubDiv.style.visibility = 'hidden'
+                
+            const editBtn = createHtmlElement('img',`p-editbtn-${name}`,['proj-editbtn'],null,null,rightSubDiv);
+                editBtn.src = iconEdit
+
+            const deleteBtn = createHtmlElement('img', `p-deletebtn-${name}`, ['proj-deletebtn'], null, null, rightSubDiv);
+                deleteBtn.src = iconDelete
+        })
+    }
+
+    const renderAddButtons = () => {
+        const projAddBtn = createHtmlElement('img',`proj-addbtn`,null,null,null,panel,);
+            projAddBtn.src = iconAdd
+
+        const taskAddBtn = createHtmlElement('img',`task-addbtn`,null,null,null,content,);
+            taskAddBtn.src = iconAdd
     }
 
     const renderDialogDelete = () => {
         const dialog = createHtmlElement('dialog', 'modal-delete-dialog',null,null,null,content)
 
-        const closeBtn = createHtmlElement('button', 'modal-delete-closebtn', null, 'button', 'x', dialog)
-
-        const title = createHtmlElement('h2', 'modal-delete-h2', null, null, 'Confirm Delete?', dialog)
+        const closeBtn = createHtmlElement('img', 'modal-delete-closebtn', null, null, null, dialog)
+            closeBtn.src = iconEsc
+        
+        const title = createHtmlElement('p', 'modal-delete-h2', null, null, 'Confirm Delete?', dialog)
 
         const submitBtn = createHtmlElement('button', 'modal-delete-submitbtn', null, 'button', 'Delete', dialog)
     }
@@ -93,23 +139,28 @@ const Dom = (() => {
     const renderDialogAddTask = (editTitle, editDescription, editDueDate, editParentProject, editPriority) => {
         const dialog = createHtmlElement('dialog', 'modal-addtask-dialog',null,null,null,content)
 
-        const closeBtn = createHtmlElement('button', 'modal-addtask-closebtn', null, 'button', 'x', dialog)
+        const headerSubDiv = createHtmlElement('div', `modal-addtask-headersubdiv`, null, null, null, dialog);
 
-        const title = createHtmlElement('h2', 'modal-addtask-h2', null, null, 'New Task', dialog)
+        const closeBtn = createHtmlElement('img', 'modal-addtask-closebtn', null, null, null, headerSubDiv)
+            closeBtn.src = iconEsc
+
+        const title = createHtmlElement('h2', 'modal-addtask-h2', null, null, 'New Task', headerSubDiv)
             if(editTitle) title.innerText = 'Edit Task'
 
         const inputTitle = createHtmlElement('input', 'modal-addtask-input-title', null, 'text', null, dialog)
             if(editTitle) inputTitle.value = editTitle
 
         const inputDescription = createHtmlElement('textarea', 'modal-addtask-input-description', null, null, null, dialog)
-        inputDescription.cols = 30
+        inputDescription.cols = 25
         inputDescription.rows = 3
             if(editDescription) inputDescription.value  = editDescription
 
         const inputDueDate = createHtmlElement('input', 'modal-addtask-input-duedate', null, 'date', null, dialog)
             if(editDueDate) inputDueDate.value = editDueDate
 
-        const inputSelectPriority = createHtmlElement('select', 'modal-addtask-input-priority', null, null, null, dialog)
+        const selectorsSubDiv = createHtmlElement('div', `modal-addtask-selectorssubdiv`, null, null, null, dialog);
+
+        const inputSelectPriority = createHtmlElement('select', 'modal-addtask-input-priority', null, null, null, selectorsSubDiv)
             const priorityLow = createHtmlElement('option', `modal-addtask-input-priority-low`, null, null, 'Low', inputSelectPriority)
                 priorityLow.value = 0
             const priorityNormal = createHtmlElement('option', `modal-addtask-input-priority-normal`, null, null, 'No Priority', inputSelectPriority)
@@ -122,7 +173,7 @@ const Dom = (() => {
                     console.log('inputSelectPriority.selectedIndex: ' + inputSelectPriority.selectedIndex)
                     inputSelectPriority.selectedIndex = editPriority}
 
-        const inputSelectProject = createHtmlElement('select', 'modal-addtask-input-select-project', null, null, null, dialog)
+        const inputSelectProject = createHtmlElement('select', 'modal-addtask-input-select-project', null, null, null, selectorsSubDiv)
             Storage.getList()._getProjects()
             .forEach(project => {
                 const optionsProject = createHtmlElement('option', `modal-addtask-input-option-proj${project.getTitle()}`, null, null, project.getTitle(), inputSelectProject)
@@ -141,9 +192,12 @@ const Dom = (() => {
     const renderDialogAddProj = (editTitle) => {
         const dialog = createHtmlElement('dialog', 'modal-addproj-dialog',null,null,null,content)
 
-        const closeBtn = createHtmlElement('button', 'modal-addproj-closebtn', null, 'button', 'x', dialog)
+        const headerSubDiv = createHtmlElement('div', `modal-addproj-headersubdiv`, null, null, null, dialog);
 
-        const title = createHtmlElement('h2', 'modal-addproj-h2', null, null, 'New Project', dialog)
+        const closeBtn = createHtmlElement('img', 'modal-addproj-closebtn', null, null, null, headerSubDiv)
+            closeBtn.src = iconEsc
+
+        const title = createHtmlElement('h2', 'modal-addproj-h2', null, null, 'New Project', headerSubDiv)
         if(editTitle) title.innerText = 'Edit project'
 
         const inputTitle = createHtmlElement('input', `modal-addproj-input-title`, null, 'text', null, dialog)
