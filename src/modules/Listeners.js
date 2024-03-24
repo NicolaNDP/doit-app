@@ -4,7 +4,7 @@ import Storage from "./Storage"
 
 export default class Listeners {
 
-    static currentProject = this.currentProject || Storage.getList()._getProjects()[0].getTitle() // || for  initialization
+    static currentProject = '' || Storage.getList()._getProjects()[0].getTitle() // || for  initialization
     
     static getCurrentList() {
         return Storage.getList()
