@@ -31,5 +31,4 @@ export default class Project {
     editProject(newTitle) {
         this.title = newTitle;
     }
-    
 }

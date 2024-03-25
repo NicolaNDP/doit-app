@@ -41,8 +41,6 @@ const Dom = (() => {
     }
 
     function renderHeader () {
-        console.log('header called!')
-
         const div = createHtmlElement('div', `header-div`, null, null, null, header);
 
         const title = createHtmlElement('h1', 'header-title', null, null, 'DOIT!', div)
@@ -57,7 +55,7 @@ const Dom = (() => {
         
             const currentProject = createHtmlElement('t2', `title-currentproject` ,['title-currentproject'], null, Listeners.currentProject, content)
 
-        tasks.forEach((task) => {
+            tasks.forEach((task) => {
             const name = task.getTitle().toLowerCase().split(" ").join("_")
 
             const div = createHtmlElement('div',`t-div-${task.getId()}`,['task-div'],null,null,content);
@@ -67,7 +65,7 @@ const Dom = (() => {
             const checkbox = createHtmlElement('input', `t-checkbox-${task.getId()}`, ['task-checkbox'], 'checkbox', null, leftSubDiv);
             checkbox.checked = task.isChecked() 
 
-            const title = createHtmlElement( 'p', `t-t3-${name}`, ['task-t3'], null, task.getTitle(), leftSubDiv);
+            const title = createHtmlElement( 'p', `t-t3-${task.getId()}`, ['task-t3'], null, task.getTitle(), leftSubDiv);
 
             const date = createHtmlElement( 'p', `t-date-${name}`, ['task-date'], null, task.getDueDate_distanceFrom(), div);
 
@@ -77,15 +75,14 @@ const Dom = (() => {
                 }else{
                     priority.src = iconNoPriority
                 }
-                console.log(task.getPriority())
 
             const rightSubDiv = createHtmlElement('div', `t-rightsubdiv-${task.getId()}`, ['task-rightsubdiv'], null, null, div);
                 rightSubDiv.style.visibility = 'hidden'
 
-            const editBtn = createHtmlElement('img', `t-editbtn-${task.getId()}`, ['task-editbtn'], null, null, rightSubDiv);
+            const editBtn = createHtmlElement('img', `t-editbtn-${task.getId()}`, ['task-editbtn', 'highlight'], null, null, rightSubDiv);
                 editBtn.src = iconEdit
 
-            const deleteBtn = createHtmlElement( 'img', `t-deletebtn-${task.getId()}`, ['task-deletebtn'], null, null, rightSubDiv);
+            const deleteBtn = createHtmlElement( 'img', `t-deletebtn-${task.getId()}`, ['task-deletebtn', 'highlight'], null, null, rightSubDiv);
                 deleteBtn.src = iconDelete
 
             if (task.isChecked()) {
@@ -109,26 +106,26 @@ const Dom = (() => {
             const rightSubDiv = createHtmlElement('div', `p-rightsubdiv-${name}`, ['proj-rightsubdiv'], null, null, div);
                 rightSubDiv.style.visibility = 'hidden'
                 
-            const editBtn = createHtmlElement('img',`p-editbtn-${name}`,['proj-editbtn'],null,null,rightSubDiv);
+            const editBtn = createHtmlElement('img',`p-editbtn-${name}`,['proj-editbtn', 'highlight'],null,null,rightSubDiv);
                 editBtn.src = iconEdit
 
-            const deleteBtn = createHtmlElement('img', `p-deletebtn-${name}`, ['proj-deletebtn'], null, null, rightSubDiv);
+            const deleteBtn = createHtmlElement('img', `p-deletebtn-${name}`, ['proj-deletebtn', 'highlight'], null, null, rightSubDiv);
                 deleteBtn.src = iconDelete
         })
     }
 
     const renderAddButtons = () => {
-        const projAddBtn = createHtmlElement('img',`proj-addbtn`,null,null,null,panel,);
+        const projAddBtn = createHtmlElement('img',`proj-addbtn`,['highlight'],null,null,panel,);
             projAddBtn.src = iconAdd
 
-        const taskAddBtn = createHtmlElement('img',`task-addbtn`,null,null,null,content,);
+        const taskAddBtn = createHtmlElement('img',`task-addbtn`,['highlight'],null,null,content,);
             taskAddBtn.src = iconAdd
     }
 
     const renderDialogDelete = () => {
         const dialog = createHtmlElement('dialog', 'modal-delete-dialog',null,null,null,content)
 
-        const closeBtn = createHtmlElement('img', 'modal-delete-closebtn', null, null, null, dialog)
+        const closeBtn = createHtmlElement('img', 'modal-delete-closebtn', ['close-btn', 'highlight'], null, null, dialog)
             closeBtn.src = iconEsc
         
         const title = createHtmlElement('p', 'modal-delete-h2', null, null, 'Confirm Delete?', dialog)
@@ -141,19 +138,21 @@ const Dom = (() => {
 
         const headerSubDiv = createHtmlElement('div', `modal-addtask-headersubdiv`, null, null, null, dialog);
 
-        const closeBtn = createHtmlElement('img', 'modal-addtask-closebtn', null, null, null, headerSubDiv)
+        const closeBtn = createHtmlElement('img', 'modal-addtask-closebtn', ['close-btn', 'highlight'], null, null, headerSubDiv)
             closeBtn.src = iconEsc
 
         const title = createHtmlElement('h2', 'modal-addtask-h2', null, null, 'New Task', headerSubDiv)
             if(editTitle) title.innerText = 'Edit Task'
 
         const inputTitle = createHtmlElement('input', 'modal-addtask-input-title', null, 'text', null, dialog)
+            inputTitle.placeholder = 'Title'
             if(editTitle) inputTitle.value = editTitle
 
         const inputDescription = createHtmlElement('textarea', 'modal-addtask-input-description', null, null, null, dialog)
-        inputDescription.cols = 25
-        inputDescription.rows = 3
-            if(editDescription) inputDescription.value  = editDescription
+            inputDescription.placeholder = 'Description'
+            inputDescription.cols = 25
+            inputDescription.rows = 3
+                if(editDescription) inputDescription.value  = editDescription
 
         const inputDueDate = createHtmlElement('input', 'modal-addtask-input-duedate', null, 'date', null, dialog)
             if(editDueDate) inputDueDate.value = editDueDate
@@ -194,20 +193,45 @@ const Dom = (() => {
 
         const headerSubDiv = createHtmlElement('div', `modal-addproj-headersubdiv`, null, null, null, dialog);
 
-        const closeBtn = createHtmlElement('img', 'modal-addproj-closebtn', null, null, null, headerSubDiv)
+        const closeBtn = createHtmlElement('img', 'modal-addproj-closebtn', ['close-btn', 'highlight'], null, null, headerSubDiv)
             closeBtn.src = iconEsc
 
         const title = createHtmlElement('h2', 'modal-addproj-h2', null, null, 'New Project', headerSubDiv)
         if(editTitle) title.innerText = 'Edit project'
 
         const inputTitle = createHtmlElement('input', `modal-addproj-input-title`, null, 'text', null, dialog)
-        if(editTitle) inputTitle.value = editTitle
+            inputTitle.placeholder = 'Title'
+            if(editTitle) inputTitle.value = editTitle
 
         const submitBtn = createHtmlElement('button', `modal-addproj-submitbtn`, null, 'button', 'Add', dialog)
     }
 
+    const renderDialogCard = (id) => {
+        const taskObject = Storage.getTaskObj(Storage.getTaskParent(id), id)
+        
+        const dialog = createHtmlElement('dialog', 'modal-card-dialog', null, null, null, content)
 
-    return { renderTasks, renderProjects, renderAddButtons, renderDialogAddProj, renderDialogAddTask, renderDialogDelete, refreshPage }
+        const headerSubDiv = createHtmlElement('div', `modal-card-headersubdiv`, null, null, null, dialog);
+
+        const closeBtn = createHtmlElement('img', 'modal-card-closebtn', ['close-btn', 'highlight'], null, null, headerSubDiv)
+            closeBtn.src = iconEsc
+
+        const title = createHtmlElement('h3', 'modal-card-h3', null, null, `${taskObject.getTitle()}`, headerSubDiv)
+
+        const description = createHtmlElement('p', 'modal-card-description', null, null, `${taskObject.getDescription()}`, dialog)
+
+        const dueDate = createHtmlElement('p', 'modal-card-duedate', null, null, `${taskObject.getDueDate()}, ${taskObject.getDueDate_distanceFrom()}`, dialog)
+
+        const priority = createHtmlElement('img', `modal-card-priority`, null, null, null, dialog);
+        if(taskObject.getPriority() !== '1'){
+            priority.src = taskObject.getPriority() === '0' ? iconLowPriority : iconHighPriority
+        }else{
+            priority.src = iconNoPriority
+        }
+    }
+
+
+    return { renderTasks, renderProjects, renderAddButtons, renderDialogAddProj, renderDialogAddTask, renderDialogDelete, refreshPage, renderDialogCard }
 })();
 
 

@@ -1,0 +1,14 @@
+/* ===== ANIMATIONS =====  */
+
+.highlight-icon {
+    animation: highlight-icon 0.7s ease;
+}
+  
+@keyframes highlight-icon {
+  from{
+    opacity: 0.4;
+  }
+  to{
+    opacity: 0.9;
+  }
+}

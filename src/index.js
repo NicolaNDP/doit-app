@@ -1,6 +1,7 @@
 import Storage from "./modules/Storage";
 import Listeners from "./modules/Listeners";
 import "./style.css"
+import "./animations.css"
 
 const demoInit = () => {
     Storage.addProject('default')
@@ -34,7 +35,7 @@ const initApp = () => {
         console.log('data preloded!')
     }
 }
-initReset()
+
 initApp()
 
 //Listeners.loadPage()

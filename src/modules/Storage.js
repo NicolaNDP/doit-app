@@ -43,9 +43,8 @@ export default class Storage {
     }
 
     static getTaskObj(projectTitle, taskId) {
-        console.log('from storage getTaskObj!' + projectTitle + ', ' + taskId)
        return Storage.getList()._getProject(projectTitle).getTask(taskId)
-    }
+    }//filtrare projectTitle
     
     //==/==//
 
