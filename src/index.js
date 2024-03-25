@@ -70,5 +70,3 @@ const initApp = () => {
 
 initApp()
 
-//Listeners.loadPage()
-
