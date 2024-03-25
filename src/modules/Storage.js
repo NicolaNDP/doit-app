@@ -7,7 +7,7 @@ export default class Storage {
     static getList() {
         const dataList = Object.assign(
             new Container(),
-            JSON.parse(localStorage.getItem('doit_todo_app_folder'))
+            JSON.parse(localStorage.getItem('doitapp_local_data'))
         )
         dataList._setProjects(
             dataList._getProjects()
@@ -26,8 +26,7 @@ export default class Storage {
     };
       
     static saveList(data) {
-        localStorage.setItem('doit_todo_app_folder', JSON.stringify(data));
-        console.log('data saved to l store! ' + JSON.stringify(data))
+        localStorage.setItem('doitapp_local_data', JSON.stringify(data));
     }
 
     static getTaskParent(taskId) {

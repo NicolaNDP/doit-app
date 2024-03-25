@@ -159,10 +159,14 @@ export default class Listeners {
                 Listeners.addAnimationHighlight()
 
                 dialogEditTaskSubmitBtn.addEventListener('click', () => {
-                    Storage.addTask(dialogEditTaskProjSelect.value, dialogEditTaskNewTitle.value, dialogEditTaskNewDescription.value, dialogEditTaskNewDueDate.value, dialogAddTaskPriority.value)
-                    Storage.deleteTask(taskProjectParent, taskId) 
-                    dialogEditTask.close()
-                    Listeners.loadPage()
+                    if(dialogEditTaskNewTitle.value) {
+                        Storage.addTask(dialogEditTaskProjSelect.value, dialogEditTaskNewTitle.value, dialogEditTaskNewDescription.value, dialogEditTaskNewDueDate.value, dialogAddTaskPriority.value)
+                        Storage.deleteTask(taskProjectParent, taskId) 
+                        dialogEditTask.close()
+                        Listeners.loadPage()
+                    }else{
+                        alert('Please, compile the form.')
+                    }
                 })
                 dialogEditTaskCloseBtn.addEventListener('click', () => {
                     dialogEditTask.close()
@@ -192,11 +196,15 @@ export default class Listeners {
                     if(dialogEditProjNewTitle.value.includes(' ')){
                         alert('Space is not allowed here. \nPlease, choose a different name or use\'_\'.')
                     }else{
-                        Storage.editProject(projTitle, dialogEditProjNewTitle.value)
-                        if(projTitle === Listeners.currentProject) Listeners.setCurrentProject(dialogEditProjNewTitle.value)
-                        console.log(Storage.getList())
-                        dialogEditProj.close()
-                        Listeners.loadPage()
+                        if(dialogEditProjNewTitle.value){
+                            Storage.editProject(projTitle, dialogEditProjNewTitle.value)
+                            if(projTitle === Listeners.currentProject) Listeners.setCurrentProject(dialogEditProjNewTitle.value)
+                            console.log(Storage.getList())
+                            dialogEditProj.close()
+                            Listeners.loadPage()
+                        }else{
+                            alert('Please, compile the form.')
+                        }
                     }
                 })
                 dialogEditProjCloseBtn.addEventListener('click', () => {
@@ -271,10 +279,14 @@ export default class Listeners {
             Listeners.addAnimationHighlight()
 
             dialogAddTaskSubmitBtn.addEventListener('click', () => {
-                Storage.addTask(dialogAddTaskProjSelect.value, dialogAddTaskTitle.value, dialogAddTaskDescription.value, dialogAddTaskDueDate.value, dialogAddTaskPriority.value)
-                dialogAddTask.close()
-                Listeners.loadPage()
-                console.log('pushed submit add task! ' + dialogAddTaskTitle.value)
+                if (dialogAddTaskTitle.value){
+                    Storage.addTask(dialogAddTaskProjSelect.value, dialogAddTaskTitle.value, dialogAddTaskDescription.value, dialogAddTaskDueDate.value, dialogAddTaskPriority.value)
+                    dialogAddTask.close()
+                    Listeners.loadPage()
+                    console.log('pushed submit add task! ' + dialogAddTaskTitle.value)
+                }else{
+                    alert('Please, compile the form.')
+                }
             })
             dialogAddTaskCloseBtn.addEventListener('click', () => {
                 dialogAddTask.close()
@@ -302,10 +314,14 @@ export default class Listeners {
                 if(dialogAddProjTitle.value.includes(' ')){
                     alert('Space is not allowed here. \nPlease, choose a different name or use\'_\'.');
                 }else{
-                    Storage.addProject(dialogAddProjTitle.value)
-                    dialogAddProj.close()
-                    Listeners.loadPage()
-                    console.log('pushed addProj ' + dialogAddProjTitle.value)
+                    if(dialogAddProjTitle.value){
+                        Storage.addProject(dialogAddProjTitle.value)
+                        dialogAddProj.close()
+                        Listeners.loadPage()
+                        console.log('pushed addProj ' + dialogAddProjTitle.value)
+                    }else{
+                        alert('Please, compile the form.')
+                    }
                 }
             })
             dialogAddProjCloseBtn.addEventListener('click', () => {
