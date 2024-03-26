@@ -1,5 +1,3 @@
-import { forEach } from "lodash"
-import Container from "./Container"
 import Dom from "./DOM"
 import Storage from "./Storage"
 
